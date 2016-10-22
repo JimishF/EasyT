@@ -37,6 +37,7 @@ Route::get("/subjects/edit","SubjectController@edit");
 Route::post("/subjects/update","SubjectController@update");
 
 Route::get("/mcqexam/getref/{ref}","ExamController@getExam");
+Route::post("/mcqexam/getref","ExamController@evaluateExam");
 
 Route::get("/result/index","ResultController@index");
 

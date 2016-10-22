@@ -9,6 +9,7 @@ use Input;
 use Session;
 use App\Questions;
 use App\Exam;
+use App\Ans;
 use Validator;
 
 class ExamController extends Controller
@@ -133,6 +134,64 @@ class ExamController extends Controller
 	 	// print_r($examnum);
 
 	 	$qs = Questions::where("exam_id",$id)->get()->toArray();
-	 	return view("pages.apiquest")->with("qs",$qs);
+	 	return view("pages.apiquest")->with("qs",$qs)->with("ref",$ref);
+	 }
+	 public function evaluateExam(Request $request)
+	 {	
+	 	$ar = $request->all();
+	 	$ref = $ar['ref'];
+	 	
+	 	$examnum = base64_decode(base64_decode( $ref ));
+	 	$examnum = explode("|",$examnum);
+	 	$exam_id = $examnum[0];
+	 	$a_by = $ar['user_number'];
+
+	 	// print_r($exam_id);
+
+	 	$qs = Questions::where("exam_id",$exam_id)->get()->toArray();
+	 	// print_r($qs);
+
+	 	$valid_ansAr = Array();
+	 	$user_ansAr = Array();
+	 	foreach ($qs as $q) {
+			$valid_ansAr[ $q['q_id'] ] = $q['q_right_answer'];		      	
+	 	}
+	 	// die("lol");
+
+	 	foreach ($ar as $key => $value) {
+	 		if( starts_with($key,"qst_") )
+	 		{
+	 			$q_str_id = str_replace("qst_", "", $key);
+	 			$user_ansAr[ $q_str_id ] = $value;
+	 			$user_ansAr[] = $value;
+
+	 		}
+	 	}
+
+
+		$total = 0;
+		$obtained = 0;
+
+	 	foreach ($valid_ansAr as $q_id => $ans) {
+		$total ++;	 			
+	 		$given = $user_ansAr[ $q_id ];
+	 		 if( $user_ansAr[ $q_id ] == $ans ){
+	 			$marks = 1;	
+	 			$obtained ++;
+	 		}else{
+	 			$marks = 0;
+	 		}
+	 		$c_status = Ans::create([
+				'a_by' => $a_by,
+				'exam_id' => $exam_id,
+				'q_id' => $q_id,
+				'ans' => $ans,
+				'given' => $user_ansAr[ $q_id ],
+				'marks' => $marks,
+	 		]);
+	 	}	
+
+
+	 	return view("pages.instantresults")->with('total',$total)->with('obtained',$obtained);
 	 }
 }
