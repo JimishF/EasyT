@@ -15,7 +15,7 @@
 <body>
 	<form method="post" action="/mcqexam/getref" >
 		{{ csrf_field() }}
-		<input type="hidden" name="ref" value="{{ $ref }}">
+		<input type="hidden" name="ref" id="ref" value="{{ $ref }}">
 		<input type="hidden" name="user_number" id="user_number" >
 		
 	<div class="container ex_roll" >
@@ -35,6 +35,7 @@
 	        </div>
 	      </div>
 	    </div>
+	    <h6 style="display: none;color: red" id="err">Sorry! You can not give this exam twice.</h6>
 	  </div>
 	            
 	</div>
@@ -73,8 +74,18 @@
 			$(".enroll").click(function () {
 				if( $("#theText").val() != "" ){	
 					$("#user_number").val( $("#theText").val());
-					$(".ex_form").show();
-					$(".ex_roll").hide();
+					$.get("/check_eligibility/"+$("#ref").val()+"/"+$("#theText").val()).done(function( d ){
+						if( d == "ok" ){
+							$(".ex_form").show();
+							$(".ex_roll").hide();
+						}else{
+							$("#err").show();
+							setTimeout(function(){
+								$("#err").hide();
+							},4000);
+						}
+					});
+					
 				}
 			});
 		});

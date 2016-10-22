@@ -192,6 +192,36 @@ class ExamController extends Controller
 	 	}	
 
 
+	 	return redirect('results/'.$exam_id.'/'.$a_by);
+	 	// return view("pages.instantresults")->with('total',$total)->with('obtained',$obtained);
+	 }
+	 public function results($e_id,$a_by){
+	 	$arr = Ans::where('exam_id',$e_id)->where('a_by',$a_by)->get()->toArray();
+	 
+	 	print_r($arr);
+	 	$total = 0;
+	 	$obtained = 0;
+	 	foreach ($arr as $ans) {
+	 		if( $ans['marks'] == 1){
+	 			$obtained ++;
+	 		}	
+	 		$total++;
+	 	}
 	 	return view("pages.instantresults")->with('total',$total)->with('obtained',$obtained);
+
+	 }
+	 public function eligible($ref,$a_by)
+	 {
+
+	 	$examnum = base64_decode(base64_decode( $ref ));
+	 	$examnum = explode("|",$examnum);
+	 	$exam_id = $examnum[0];
+
+	 	$data = Ans::where('exam_id',$exam_id)->where('a_by',$a_by)->count();
+	 	if( $data  > 0){
+	 		return "not ok";
+	 	}else{
+	 		return "ok";
+	 	}
 	 }
 }

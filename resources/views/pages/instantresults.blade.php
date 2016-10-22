@@ -22,8 +22,7 @@
     </script>
   </head>
   <body >
-  <div align="center">
-    
+  <div align="center">    
     <div id="piechart_3d" style="width: 600px; height: 500px;"></div>
   </div>
   </body>

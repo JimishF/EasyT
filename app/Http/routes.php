@@ -38,6 +38,8 @@ Route::post("/subjects/update","SubjectController@update");
 
 Route::get("/mcqexam/getref/{ref}","ExamController@getExam");
 Route::post("/mcqexam/getref","ExamController@evaluateExam");
+Route::get("/results/{e_id}/{a_by}","ExamController@results");
+Route::get("/result/index","ExamController@results");
 
-Route::get("/result/index","ResultController@index");
+Route::get("/check_eligibility/{e_id}/{a_by}","ExamController@eligible");
 
