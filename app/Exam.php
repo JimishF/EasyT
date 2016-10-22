@@ -10,25 +10,22 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
-class User extends Model implements AuthenticatableContract,
-                                    AuthorizableContract,
-                                    CanResetPasswordContract
+class Exam extends Model
 {
-    use Authenticatable, Authorizable, CanResetPassword;
-
+    
     /**
      * The database table used by the model.
      *
      * @var string
      */
-    protected $table = 'users';
+    protected $table = 'exam_master';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $guarded = ['t_id'];
+    protected $guarded = ['e_id'];
 
 
     /**
@@ -36,7 +33,7 @@ class User extends Model implements AuthenticatableContract,
      *
      * @var array
      */
-    protected $hidden = ['password'];
+    
     public $timestamps = false;
 
 }
