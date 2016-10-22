@@ -15,6 +15,8 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
+
 <!-- Compiled and minified CSS -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
@@ -187,6 +189,9 @@
   section{
     padding-left: 15px;
   }
+  .navbar-header a:hover{
+    color:black!important;
+  }
   
  
     </style>
@@ -195,7 +200,7 @@
      <nav class="navbar bg-gray text-white">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand text-white" href="#">Learning Management System</a>
+      <a class="navbar-brand text-white" href="#">Exam System</a>
     </div>
     
     <ul class="nav navbar-nav navbar-right text-white">
@@ -229,26 +234,73 @@
     </div>
   </div>
 </nav>    
+    
         @yield('content')
 
+<!-- Modal -->
+<div id="myModal" class="modal fade" style="margin-top:100px;" role="dialog">
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Embed code for this Exam</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <label class="col-sm-2">height</label>  
+          <div class="col-sm-3"><input type="number" min="500" value="500" class="corm-control" id="_h"></div>  
+          <label class="col-sm-2">width</label>  
+          <div class="col-sm-3"><input type="text" readonly="" disabled="" value="100%" class="corm-control"></div>  
+        </div>
+      <br>
+        <textarea id="codearea" rows="5" class="form-control col-md-12" readonly="" >
+        </textarea>
+
+      </div>
+
+      <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
+      </div>
     </div>
+
+  </div>
+</div>
+
     <!-- JavaScripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
      
   <!-- Compiled and minified JavaScript -->
   
           
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
-    
+    <script type="text/javascript">
+      var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(a){var c,d,e,f,g,h,i,b="",j=0;for(a=Base64._utf8_encode(a);j<a.length;)c=a.charCodeAt(j++),d=a.charCodeAt(j++),e=a.charCodeAt(j++),f=c>>2,g=(3&c)<<4|d>>4,h=(15&d)<<2|e>>6,i=63&e,isNaN(d)?h=i=64:isNaN(e)&&(i=64),b=b+this._keyStr.charAt(f)+this._keyStr.charAt(g)+this._keyStr.charAt(h)+this._keyStr.charAt(i);return b},decode:function(a){var c,d,e,f,g,h,i,b="",j=0;for(a=a.replace(/[^A-Za-z0-9\+\/\=]/g,"");j<a.length;)f=this._keyStr.indexOf(a.charAt(j++)),g=this._keyStr.indexOf(a.charAt(j++)),h=this._keyStr.indexOf(a.charAt(j++)),i=this._keyStr.indexOf(a.charAt(j++)),c=f<<2|g>>4,d=(15&g)<<4|h>>2,e=(3&h)<<6|i,b+=String.fromCharCode(c),64!=h&&(b+=String.fromCharCode(d)),64!=i&&(b+=String.fromCharCode(e));return b=Base64._utf8_decode(b)},_utf8_encode:function(a){a=a.replace(/\r\n/g,"\n");for(var b="",c=0;c<a.length;c++){var d=a.charCodeAt(c);d<128?b+=String.fromCharCode(d):d>127&&d<2048?(b+=String.fromCharCode(d>>6|192),b+=String.fromCharCode(63&d|128)):(b+=String.fromCharCode(d>>12|224),b+=String.fromCharCode(d>>6&63|128),b+=String.fromCharCode(63&d|128))}return b},_utf8_decode:function(a){for(var b="",c=0,d=c1=c2=0;c<a.length;)d=a.charCodeAt(c),d<128?(b+=String.fromCharCode(d),c++):d>191&&d<224?(c2=a.charCodeAt(c+1),b+=String.fromCharCode((31&d)<<6|63&c2),c+=2):(c2=a.charCodeAt(c+1),c3=a.charCodeAt(c+2),b+=String.fromCharCode((15&d)<<12|(63&c2)<<6|63&c3),c+=3);return b}};
+    </script>
     <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
 
+<script type="text/javascript">
+    $(document).ready(function () {
+       $('.mod_open').click(function () {
+           var ref = $(this).attr('data-ref');
+            Exam = Base64.encode( Base64.encode(ref+"|"+ Date.now()) );
+
+           $("#codearea").val('<iframe id="_form_frame" style="width:100%;height:500px;border:0px" src="http://lms.dev/mcqexam/getref/'+Exam+'"  height="500px"></iframe><script>(function(){var confirmOnPageExit=function(){return "This is a demo version of easyT. Leaving or refreshing window will reset your exam progress. Are you sure?";};window.onbeforeunload =confirmOnPageExit})();<\/script>');
+           $("#myModal").modal();
+       });
+
+       $("#_h").change(function(){
+          $("#codearea").val('<iframe id="_form_frame" style="width:100%;height:'+$(this).val()+'px;border:0px" height="'+$(this).val()+'px" src="http://lms.dev/mcqexam/getref/'+Exam+'"></iframe><script>(function(){var confirmOnPageExit=function(){return "This is a demo version of easyT. Leaving or refreshing window will reset your exam progress. Are you sure?";};window.onbeforeunload =confirmOnPageExit})();<\/script>');
+       })
+    });
+</script>
     <script type="text/javascript">
         $(document).ready( function () {
             $('table').DataTable();
             $('select').addClass('form-control');
             $('input').addClass('form-control');
         });
+
 
     </script>
 </body>

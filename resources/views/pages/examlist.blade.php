@@ -1,17 +1,6 @@
+@extends('layouts.app')
 
-<head>
-    
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/css/materialize.min.css">
-
-    <script src="http://code.jquery.com/jquery-latest.min.js"
-        type="text/javascript"></script>
-
-  <!-- Compiled and minified JavaScript -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.7/js/materialize.min.js"></script>
-         
-</head>  <!-- Compiled and minified CSS -->
-
+@section('content')
 
 <div class="container">
     <div class="row">
@@ -19,7 +8,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Exam</div>
                 <div class="panel-body">
-                    <table class="table-striped table-bordered table">
+                    <table class=" table">
                     <thead>
                         
                             <tr>
@@ -27,23 +16,24 @@
                                 <th>Subject name</th>
                                 <th>Duration</th>
                                 <th>Questions</th>
+                                <th>&lt; embed /&gt;</th>
                             </tr>
                     </thead>
                     <tbody>
                         
                             @foreach ( $exam as $e )
                                 <tr>
-                                    <td>{{ $e['id'] }}</td>
-                                    <td>{{ $q['subject'] }}</td>
-                                    <td>{{ $q['subject'] }}</td>
+                                    <td>{{ $e['e_id'] }}</td>
+                                    <td>{{ $e['subject'] }}</td>
+                                    <td>{{ $e['e_duration'] }} mins.</td>
 
-                                    <td> <button class="btn btn-success">
-                                        <i class="fa fa-edit"></i>
-                                    </button> </td>
-                                    <td >
-                                        <button class="btn btn-success">
-                                            <i class="fa fa-trash"></i>
-                                        </button> 
+                                    <td> <a class="btn btn-success" href="/exam/index/{{ $e['e_id'] }}">
+                                        <i class="fa  fa-2 fa-question-circle"></i>
+                                    </a> </td>
+                                    
+                                    <td> <a class="btn mod_open btn-info" data-ref="{{ $e['e_id'] }}">
+                                        <i class="fa fa-clone"></i>
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -54,3 +44,6 @@
         </div>
     </div>
 </div>
+
+
+@endsection

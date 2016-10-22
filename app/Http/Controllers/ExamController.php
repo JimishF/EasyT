@@ -71,6 +71,9 @@ class ExamController extends Controller
 					    {
 					    	$dbData = Array();
 					    	$dbData['q_qestion'] = $tmp[0];
+					    	if($tmp[0] == "QUESTION" || $tmp[1] == "right answer" ){
+					    		continue;
+					    	}
 					    	$dbData['q_right_answer'] = $tmp[1];
 					    
 					    	unset($tmp[0]);
@@ -111,11 +114,25 @@ class ExamController extends Controller
 	 {
 
 	 	$exam = Exam::where("teacher_id",Session::get('id'))->get()->toArray();
-	 	return view("pages.");
+	 	return view("pages.examlist")->with('exam',$exam);
 	 }
 	 public function getonly($id)
 	 {
+
+	 	$exam = Exam::where("e_id",$id)->first()->toArray();
 	 	$qs = Questions::where("exam_id",$id)->get()->toArray();
-	 	return view("pages.quest_list")->with("qs",$qs);
+	 	// print_r($qs);
+	 	// exit();
+	 	return view("pages.quest_list")->with("qs",$qs)->with('exam',$exam);
+	 }
+	 public function getExam($ref)
+	 {
+	 	$examnum = base64_decode(base64_decode( $ref ));
+	 	$examnum = explode("|",$examnum);
+	 	$id = $examnum[0];
+	 	// print_r($examnum);
+
+	 	$qs = Questions::where("exam_id",$id)->get()->toArray();
+	 	return view("pages.apiquest")->with("qs",$qs);
 	 }
 }

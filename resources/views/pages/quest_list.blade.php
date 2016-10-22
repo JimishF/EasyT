@@ -4,20 +4,68 @@
 
 <div class="container">
     <div class="row">
-        <a href="./create" class="btn btn-primary">Add New</a>
         <div class="col-md-8 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading">Exam</div>
                 <div class="panel-body">
-                    <table class="table-striped table-bordered table">
+                <div class="row">
+                        <div class="col-sm-6">
+                            <h2>Exam Paper</h2>
+                        </div>        
+                    </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        
+                    <div class="row">
+                        <div class="col-sm-3">
+                            Exam ID                      
+                        </div>
+                        <div class="col-sm-3">
+                            : {{ $exam['e_id'] }} 
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">            
+                        Subject
+                        </div>
+                        <div class="col-sm-3">
+                            : {{ $exam['subject'] }} 
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">            
+                            Duration 
+                        </div>
+                        <div class="col-sm-3">
+                            : {{ $exam['e_duration'] }} mins.
+                        </div>
+                    
+                    </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <button>
+                            
+                        </button>
+                    </div>
+                </div>
+
+                    <table class="table-bordered table">
                     <thead>
+                    <colgroup>
+                        <col width="40%"/>
+                        <col width="10%"/>
+                        <col width="10%"/>
+                        <col width="10%"/>
+                        <col width="10%"/>
+                        <col width="10%"/>
+                        <col width="10%"/>
+                    </colgroup>
                             <tr>
                                 <th>Quesion</th>
                                 <th>Right Answer</th>
                                 <th>Option 1 </th>
                                 <th>Option 2 </th>
                                 <th>Option 3 </th>
-                                <th>Actions </th>
+                                <th colspan="2">Actions </th>
 
                             </tr>
                     </thead>
@@ -25,6 +73,7 @@
                         
                             @foreach ( $qs as $q )
                             <?php 
+                            
                                 $ans = explode("|", $q['q_answers']);
                                 $ans['right'] =  $q['q_right_answer'];
                             ?>
