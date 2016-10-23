@@ -66,7 +66,6 @@
                                 <th>Option 2 </th>
                                 <th>Option 3 </th>
                                 <th colspan="2">Actions </th>
-
                             </tr>
                     </thead>
                     <tbody>
@@ -79,10 +78,10 @@
                             ?>
                                 <tr>
                                     <td >{{ $q['q_qestion'] }}</td>
+                                    <td class="text-green">{{ $ans['right'] }}</td>
                                     <td class="text-blue">{{ $ans[1] }}</td>
                                     <td class="text-blue">{{ $ans[2] }}</td>
                                     <td class="text-blue">{{ $ans[3] }}</td>
-                                    <td class="text-green">{{ $ans['right'] }}</td>
 
                                     <td> 
                                         <button class="btn btn-success">

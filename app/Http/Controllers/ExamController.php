@@ -108,17 +108,25 @@ class ExamController extends Controller
  }
 	 public function getCreate()
 	 {
-	 	return view("pages.createExam");
+	 	if( Session::get('id') != ""){
+	 		return view("pages.createExam");
+	 	}
+	 	return redirect("/login");
 	 }
 
 	 public function index()
 	 {
-
+	 	if( Session::get('id') == ""){
+	 	return redirect("/login");
+	 	}
 	 	$exam = Exam::where("teacher_id",Session::get('id'))->get()->toArray();
 	 	return view("pages.examlist")->with('exam',$exam);
 	 }
 	 public function getonly($id)
 	 {
+	 	if( Session::get('id') == ""){
+	 		return redirect("/login");
+	 	}
 
 	 	$exam = Exam::where("e_id",$id)->first()->toArray();
 	 	$qs = Questions::where("exam_id",$id)->get()->toArray();
@@ -128,16 +136,26 @@ class ExamController extends Controller
 	 }
 	 public function getExam($ref)
 	 {
+
+	 	if( Session::get('id') == ""){
+	 		return redirect("/login");
+	 	}
 	 	$examnum = base64_decode(base64_decode( $ref ));
 	 	$examnum = explode("|",$examnum);
 	 	$id = $examnum[0];
+
+	 	$sub = Exam::where("e_id",$id)->first()->toArray();
+	 	$sub = $sub['subject'];
 	 	// print_r($examnum);
 
 	 	$qs = Questions::where("exam_id",$id)->get()->toArray();
-	 	return view("pages.apiquest")->with("qs",$qs)->with("ref",$ref);
+	 	return view("pages.apiquest")->with("qs",$qs)->with("ref",$ref)->with('sub',$sub);
 	 }
 	 public function evaluateExam(Request $request)
 	 {	
+	 	if( Session::get('id') == ""){
+	 		return redirect("/login");
+	 	}
 	 	$ar = $request->all();
 	 	$ref = $ar['ref'];
 	 	
@@ -178,7 +196,8 @@ class ExamController extends Controller
 	 		 if( $user_ansAr[ $q_id ] == $ans ){
 	 			$marks = 1;	
 	 			$obtained ++;
-	 		}else{
+	 		}else
+	 		{
 	 			$marks = 0;
 	 		}
 	 		$c_status = Ans::create([
@@ -192,13 +211,17 @@ class ExamController extends Controller
 	 	}	
 
 
-	 	return redirect('results/'.$exam_id.'/'.$a_by);
+	 	return redirect('results/'.$exam_id.'/'.$a_by); 
+	 	
 	 	// return view("pages.instantresults")->with('total',$total)->with('obtained',$obtained);
 	 }
 	 public function results($e_id,$a_by){
+		 if( Session::get('id') == ""){
+	 		return redirect("/login");
+	 	}
 	 	$arr = Ans::where('exam_id',$e_id)->where('a_by',$a_by)->get()->toArray();
 	 
-	 	print_r($arr);
+	 	// print_r($arr);
 	 	$total = 0;
 	 	$obtained = 0;
 	 	foreach ($arr as $ans) {
@@ -207,11 +230,14 @@ class ExamController extends Controller
 	 		}	
 	 		$total++;
 	 	}
-	 	return view("pages.instantresults")->with('total',$total)->with('obtained',$obtained);
+	 	return view("pages.instantresults")->with('total',$total)->with('obtained',$obtained)->with('exam_id',$e_id)->with("a_by",$a_by);
 
 	 }
 	 public function eligible($ref,$a_by)
 	 {
+	 	 if( Session::get('id') == ""){
+	 		return redirect("/login");
+	 	}
 
 	 	$examnum = base64_decode(base64_decode( $ref ));
 	 	$examnum = explode("|",$examnum);
@@ -224,4 +250,94 @@ class ExamController extends Controller
 	 		return "ok";
 	 	}
 	 }
+
+
+	 public function resultsGetView()
+	 { 
+	 	$retAr = Array();
+	 	$a_by = Session::get("id");
+	 	$data = Ans::where('exam_master.teacher_id',$a_by)
+	 	->leftJoin('exam_master','answer_log.exam_id','=','exam_master.e_id')
+	 	->get()->toArray();
+	 	// print_r($data);
+	 	// print_r($a_by);
+	 	// exit();
+	 	foreach ($data as $key => $value) 
+	 	{
+	 		if( isset($retAr[$value['subject']]) && is_array($retAr[$value['subject']]) )
+	 		{
+	 			$retAr[$value['subject']]['total'] ++; 
+	 			if( $value['marks'] == 1){
+	 				$retAr[$value['subject']]['obtained'] ++; 
+	 			}
+	 		}
+	 		else
+	 		{
+				$retAr[$value['subject']]= Array('total'=>1);
+	 			if( $value['marks'] == 1){
+	 				$retAr[$value['subject']]['obtained'] = 1; 
+	 			}
+	 			else{
+	 				$retAr[$value['subject']]['obtained'] = 0; 
+	 			}
+	 		}
+	 	}
+	 	$strval = json_encode($retAr);
+
+	 	// exit();
+	 	return view("pages.simglesubjectwise")->with("retAr","'".$strval."'")
+	 		->with("org_retAr",$retAr);
+	 }
+
+	public function resultsPostView(Request $request)
+	{
+		$ar = $request->all();
+	 	$a_by = Session::get("id");
+
+		$data = Ans::where('exam_master.teacher_id',$a_by)
+	 	->leftJoin('exam_master','answer_log.exam_id','=','exam_master.e_id')->where('exam_master.subject', $ar['sub'])
+	 	->get()->toArray();
+	 
+	 	$total = 0;
+	 	$obtained = 0;
+	 	foreach ($data as $ans) {
+	 		if( $ans['marks'] == 1){
+	 			$obtained ++;
+	 		}	
+	 		$total++;
+	 	}
+	 
+	 	$data = Ans::where('exam_master.teacher_id',$a_by)
+	 	->leftJoin('exam_master','answer_log.exam_id','=','exam_master.e_id')
+	 	->get()->toArray();
+	 	// print_r($data);
+	 	// print_r($a_by);
+	 	// exit();
+		 	foreach ($data as $key => $value) 
+		 	{
+		 		if( isset($retAr[$value['subject']]) && is_array($retAr[$value['subject']]) )
+		 		{
+		 			$retAr[$value['subject']]['total'] ++; 
+		 			if( $value['marks'] == 1){
+		 				$retAr[$value['subject']]['obtained'] ++; 
+		 			}
+		 		}
+		 		else
+		 		{
+					$retAr[$value['subject']]= Array('total'=>1);
+		 			if( $value['marks'] == 1){
+		 				$retAr[$value['subject']]['obtained'] = 1; 
+		 			}
+		 			else{
+		 				$retAr[$value['subject']]['obtained'] = 0; 
+		 			}
+		 		}
+		 	
+		}
+	 	$strval = json_encode($retAr);
+
+	 	// print_r($data);
+	 	return view("pages.simglesubjectwise_post")->with('total',$total)->with('obtained',$obtained)->with("a_by",$a_by)->with("sub_name",$ar['sub'])->with("retAr","'".$strval."'")
+	 		->with("org_retAr",$retAr);;
+}
 }

@@ -9,13 +9,13 @@
 
                 <div class="panel-body">
                     <a href="/exam/create">
-                        <div class="card text-white card-1 bg-l-green col-sm-4">
-                            <i class="fa fa-book big-size"></i><h2 style="padding-left: 10px;"> Add New Subject</h2>
-                        </div>
-                    </a>
-                    <a href="/exam/create">
                         <div class="card text-white card-1 bg-l-purple col-sm-4">
                             <i class="fa fa-graduation-cap big-size" style="padding-left: 40px;"></i><h2 style="padding-left: 20px;" > Create New Exam</h2>
+                        </div>
+                    </a>
+                    <a href="/results/index">
+                        <div class="card text-white card-1 bg-l-green col-sm-4">
+                            <i class="fa fa-pie-chart big-size"></i><h2 style="padding-left: 30px;"> Checkout Results</h2>
                         </div>
                     </a>
                 </div>

@@ -17,6 +17,7 @@
                                 <th>Duration</th>
                                 <th>Questions</th>
                                 <th>&lt; embed /&gt;</th>
+                                <th> Exam link </th>
                             </tr>
                     </thead>
                     <tbody>
@@ -34,6 +35,11 @@
                                     <td> <a class="btn mod_open btn-info" data-ref="{{ $e['e_id'] }}">
                                         <i class="fa fa-clone"></i>
                                         </a>
+                                    </td>
+                                    <td>
+                                        <!-- Base64.encode( Base64.encode(ref+"|"+ Date.now()) ) -->
+
+                                        <a href="/mcqexam/getref/{{ base64_encode(base64_encode($e['e_id'].'|'.time())) }}" target="_blank"> Open Exam</a>
                                     </td>
                                 </tr>
                             @endforeach

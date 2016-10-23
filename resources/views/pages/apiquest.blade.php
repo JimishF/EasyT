@@ -41,6 +41,7 @@
 	</div>
 
 	<div class="container ex_form" style="display: none;">
+	<h5>Subject : {{ $sub  }}</h5>
 	 <ul class="collection">
 	 	<?php $i=0; ?>
 	 	@foreach($qs as $q)

@@ -16,6 +16,8 @@
     <!-- Styles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 
 <!-- Compiled and minified CSS -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -24,32 +26,47 @@
     <style>
         body {
             font-family: 'Lato';
-        }
-        body,html{
+            background: #fc00ff; /* fallback for old browsers */
+            background: -webkit-linear-gradient(to left, #fc00ff , #00dbde); /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to left, #fc00ff , #00dbde); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+                    
+    }
+    body,html{
     height: 100%;
   }
+  .panel-heading{
+    color: blue !important;
+  }
 
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
+  background: #DDDDDD !important ;
+}
         .fa-btn {
             margin-right: 6px;
         }
         .pad-l-10{
             padding-left:10px !important;
         }.bg-gray{
-            background: #000000;
-            box-shadow:  0px 0px 5px 1px #ccc;
+        background: white;
+        color: black !important;    
+            /*box-shadow:  0px 0px 5px 1px #ccc;*/
         }
         
         .text-white{
             color: white!important;
         }
-
+@media (min-width: 768px) {
+    .navbar {
+         border-radius: 0px!important;
+         color: black;
+    } 
+}
   nav.sidebar, .main{
     -webkit-transition: margin 200ms ease-out;
       -moz-transition: margin 200ms ease-out;
       -o-transition: margin 200ms ease-out;
       transition: margin 200ms ease-out;
   }
-
   .main{
     padding: 10px 10px 0 10px;
   }
@@ -179,7 +196,7 @@
   }
 
   nav.sidebar .navbar-nav .open .dropdown-menu>li>a:hover, nav.sidebar .navbar-nav .open .dropdown-menu>li>a:focus {
-    color: #CCC;
+    color: #888;
     background-color: transparent;
   }
 
@@ -189,51 +206,76 @@
   section{
     padding-left: 15px;
   }
-  .navbar-header a:hover{
-    color:black!important;
-  }
   
- 
+  .panel-heading{
+
+
+
+background: #E0EAFC; /* fallback for old browsers */
+background: -webkit-linear-gradient(to left, #E0EAFC , #CFDEF3); /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to left, #E0EAFC , #CFDEF3); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        font-size: 16px;
+        letter-spacing: 1px;
+  }
+    .panel{
+      border: 0px!important;
+
+      }
+.text-blue{
+  color:  blue!important; 
+}
+
     </style>
 </head>
 <body id="app-layout">
-     <nav class="navbar bg-gray text-white">
+     <nav class="navbar bg-gray ">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand text-white" href="#">Exam System</a>
+      <a class="navbar-brand " href="#">EasyT</a>
     </div>
-    
+    @if( Session::get("id") != "" )
+
     <ul class="nav navbar-nav navbar-right text-white">
-      <li><a href="/logout" class="text-white" ><span class="glyphicon glyphicon-log-in"></span> logout</a></li>
+      <li><a class="text-blue"> <b>{{ Session::get('name') }}</b></a></li>
+      <li><a href="/logout" class="text-blue" > logout</a></li>
     </ul>
+    @else
+    <ul class="nav navbar-nav navbar-right text-white">
+      <li><a href="/register" class="text-blue" >Register</a></li>
+    </ul>
+    @endif
   </div>
 </nav>
       
+    @if( Session::get("id") != "" )
       <nav class="navbar navbar-default sidebar" role="navigation">
     <div class="container-fluid">
+    
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-sidebar-navbar-collapse-1">
         <span class="sr-only">Toggle navigation</span>
         
       </button>      
     </div>
+
     <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li {{ Request::is('home') ? ' class=active' : 'download' }} ><a href="/home">Home<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-home"></span></a></li>
+        <li {{ Request::is('home') ? ' class=active' : null }} ><a href="/home">Home<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-home"></span></a></li>
         <li class="dropdown {{ Request::is('account') ? 'active' : null }}" >
           <a href="/account" class="dropdown-toggle " data-toggle="dropdown">My Account <span class="caret"></span><span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-user"></span></a>
           <ul class="dropdown-menu forAnimate" role="menu">
             <li><a href="#">Edit </a></li>
           </ul>
         </li>           
-        <li {{ Request::is('exam/index') ? ' class=active' : null }}  ><a href="/exam/index">Exams<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-th-list"></span></a></li>        
-        <li ><a href="/subject/index">Subjects<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-book"></span></a></li>
-
-        <li {{ Request::is('result/index') ? ' class=active' : null }}><a href="/result/index">Results<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-tags"></span></a></li>
+        
+        
+        <li {{ Request::is('exam/index') ? ' class=active' : null }}  ><a href="/exam/index">Exams<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon  glyphicon-book"></span></a></li>        
+        <li {{ Request::is('results/index') ? ' class=active' : null }}><a href="/results/index">Results<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-tags"></span></a></li>
       </ul>
     </div>
   </div>
 </nav>    
+      @endif
     
         @yield('content')
 

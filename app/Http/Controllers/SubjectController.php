@@ -8,5 +8,8 @@ use App\Http\Requests;
 
 class SubjectController extends Controller
 {
-    //
+ public function index()
+ {
+	 
+ }
 }
